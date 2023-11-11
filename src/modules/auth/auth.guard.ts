@@ -22,9 +22,8 @@ export class AuthGuard implements CanActivate {
         secret: 'secret', // todo: брать из конфига
       });
 
-      // 💡 We're assigning the payload to the request object here
-      // so that we can access it in our route handlers
-      request.headers['consumerId'] = payload.consumerId;
+      request.extra = {}
+      request.extra.consumerId = payload.consumerId;
     } catch {
       throw new UnauthorizedException();
     }

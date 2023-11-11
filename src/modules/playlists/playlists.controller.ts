@@ -16,6 +16,7 @@ import { UpdatePlaylistDto } from './dto/update-playlist.dto';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
+import { ConsumerId } from '../../common/decorators/consumer-id.decorator';
 
 @ApiTags('playlists')
 @Controller('playlists')
@@ -25,7 +26,7 @@ export class PlaylistsController {
 
   @Post()
   create(
-    @Headers('consumerId') consumerId: string,
+    @ConsumerId() consumerId: string,
     @Body() createPlaylistDto: CreatePlaylistDto,
   ) {
     return this.playlistsService.create(consumerId, createPlaylistDto);
@@ -33,20 +34,20 @@ export class PlaylistsController {
 
   @Get()
   findAll(
-    @Headers('consumerId') consumerId: string,
+    @ConsumerId() consumerId: string,
     @Query() paginationQueryDto: PaginationQueryDto,
   ) {
     return this.playlistsService.findAll(consumerId, paginationQueryDto);
   }
 
   @Get(':id')
-  findOne(@Headers('consumerId') consumerId: string, @Param('id') id: string) {
+  findOne(@ConsumerId() consumerId: string, @Param('id') id: string) {
     return this.playlistsService.findOne(consumerId, id);
   }
 
   @Patch(':id')
   update(
-    @Headers('consumerId') consumerId: string,
+    @ConsumerId() consumerId: string,
     @Param('id') id: string,
     @Body() updatePlaylistDto: UpdatePlaylistDto,
   ) {
@@ -54,7 +55,7 @@ export class PlaylistsController {
   }
 
   @Delete(':id')
-  remove(@Headers('consumerId') consumerId: string, @Param('id') id: string) {
+  remove(@ConsumerId() consumerId: string, @Param('id') id: string) {
     return this.playlistsService.remove(consumerId, id);
   }
 }
