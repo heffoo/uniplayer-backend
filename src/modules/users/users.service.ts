@@ -12,6 +12,16 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
+  async me(consumerId: string) {
+    const user = await this.usersRepository.findOneBy({ id: consumerId });
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return plainToInstance(UserDto, user);
+  }
+
   async findOne(consumerId: string, id: string) {
     const user = await this.usersRepository.findOneBy({ id });
 

@@ -1,7 +1,8 @@
-import { Controller, Get, Headers, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
+import { ConsumerId } from '../../common/decorators/consumer-id.decorator';
 
 @ApiTags('users')
 @Controller('users')
@@ -10,7 +11,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('me')
-  findOne(@Headers() { consumerId }: { consumerId: string }) {
-    return this.usersService.findOne(consumerId, consumerId);
+  findOne(@ConsumerId() consumerId: string) {
+    return this.usersService.me(consumerId);
   }
 }
