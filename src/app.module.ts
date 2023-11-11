@@ -11,6 +11,8 @@ import { FilesModule } from './modules/files/files.module';
 import { StorageModule } from './common/modules/storage/storage.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration, { ConfigType } from './config/configuration';
+import { TracksModule } from './modules/tracks/tracks.module';
+import { PlaylistsToTracksModule } from './modules/playlists-to-tracks/playlists-to-tracks.module';
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import configuration, { ConfigType } from './config/configuration';
       inject: [ConfigService],
     }),
     PlaylistsModule,
+    TracksModule,
+    PlaylistsToTracksModule,
     AuthModule,
     UsersModule,
     TrackFilesModule,

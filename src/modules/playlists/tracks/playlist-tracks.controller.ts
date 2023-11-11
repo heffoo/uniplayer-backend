@@ -13,6 +13,7 @@ import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../../auth/auth.guard';
+import { ConsumerId } from '../../../common/decorators/consumer-id.decorator';
 
 @ApiTags('tracks')
 @Controller('playlists')
@@ -20,28 +21,45 @@ import { AuthGuard } from '../../auth/auth.guard';
 export class PlaylistTracksController {
   constructor(private readonly tracksService: PlaylistTracksService) {}
 
-  @Post(':id/tracks')
-  create(@Param('id') id: string, @Body() createTrackDto: CreateTrackDto) {
-    return this.tracksService.create(id, createTrackDto);
-  }
+  // @Post(':id/tracks')
+  // create(
+  //   @ConsumerId() consumerId: string,
+  //   @Param('id') id: string,
+  //   @Body() createTrackDto: CreateTrackDto,
+  // ) {
+  //   return this.tracksService.create(consumerId, id, createTrackDto);
+  // }
 
   @Get(':id/tracks')
-  findAll(@Param('id') id: string) {
-    return this.tracksService.findAll(id);
+  findAll(@ConsumerId() consumerId: string, @Param('id') id: string) {
+    return this.tracksService.findAll(consumerId, id);
   }
 
   @Get(':id/tracks/:trackId')
-  findOne(@Param('id') id: string, @Param('trackId') trackId: string) {
-    return this.tracksService.findOne(id, trackId);
+  findOne(
+    @ConsumerId() consumerId: string,
+    @Param('id') id: string,
+    @Param('trackId') trackId: string,
+  ) {
+    return this.tracksService.findOne(consumerId, id, trackId);
   }
 
-  @Patch(':id/tracks/:trackId')
-  update(@Param('id') id: string, @Param('trackId') trackId: string, @Body() updateTrackDto: UpdateTrackDto) {
-    return this.tracksService.update(id, trackId, updateTrackDto);
-  }
+  // @Patch(':id/tracks/:trackId')
+  // update(
+  //   @ConsumerId() consumerId: string,
+  //   @Param('id') id: string,
+  //   @Param('trackId') trackId: string,
+  //   @Body() updateTrackDto: UpdateTrackDto,
+  // ) {
+  //   return this.tracksService.update(consumerId, id, trackId, updateTrackDto);
+  // }
 
   @Delete(':id/tracks/:trackId')
-  remove(@Param('id') id: string, @Param('trackId') trackId: string) {
-    return this.tracksService.remove(id, trackId);
+  remove(
+    @ConsumerId() consumerId: string,
+    @Param('id') id: string,
+    @Param('trackId') trackId: string,
+  ) {
+    return this.tracksService.remove(consumerId, id, trackId);
   }
 }

@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
-import { Track } from '../entities/track.entity';
+import { Track } from '../interfaces/track.interface';
 
 @Exclude()
 export class TrackDto implements Track {

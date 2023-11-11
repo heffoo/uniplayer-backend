@@ -7,7 +7,7 @@ export class File implements FileEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column('uuid')
   creatorId: string;
 
   @Column()

@@ -2,6 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from '../interfaces/user-entity.interface';
 import { UserConstants } from '../user.constants';
 import { Playlist } from '../../playlists/entities/playlist.entity';
+import { Track } from '../../tracks/entities/track.entity';
 
 @Entity()
 export class User implements UserEntity {
@@ -16,4 +17,7 @@ export class User implements UserEntity {
 
   @OneToMany(() => Playlist, (playlist) => playlist.creator)
   playlists: Array<Playlist>
+
+  @OneToMany(() => Track, (track) => track.creator)
+  tracks: Array<Track>
 }
