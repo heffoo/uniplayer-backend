@@ -53,7 +53,7 @@ export class PlaylistsService {
       throw new NotFoundException();
     }
 
-    return playlist;
+    return plainToInstance(PlaylistDto, playlist);
   }
 
   async update(
