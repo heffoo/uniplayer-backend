@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from '../interfaces/user-entity.interface';
 import { UserConstants } from '../user.constants';
+import { Playlist } from '../../playlists/entities/playlist.entity';
 
 @Entity()
 export class User implements UserEntity {
@@ -12,4 +13,7 @@ export class User implements UserEntity {
 
   @Column()
   password: string;
+
+  @OneToMany(() => Playlist, (playlist) => playlist.creator)
+  playlists: Array<Playlist>
 }

@@ -17,8 +17,13 @@ export class PlaylistsService {
   ) {}
 
   async create(consumerId: string, createPlaylistDto: CreatePlaylistDto) {
-    const newPlaylist =
-      await this.playlistsRepository.create(createPlaylistDto);
+    const maxWeight = await this.playlistsRepository.maximum('weight');
+    const newPlaylist = this.playlistsRepository.create({
+      ...createPlaylistDto,
+      weight: maxWeight + 1,
+      creatorId: consumerId,
+    });
+
     await this.playlistsRepository.save(newPlaylist);
 
     return plainToInstance(PlaylistDto, newPlaylist);
@@ -26,11 +31,10 @@ export class PlaylistsService {
 
   async findAll(consumerId: string, paginationQueryDto: PaginationQueryDto) {
     const [items, count] = await this.playlistsRepository.findAndCount({
-      where: {
-        /* consumerId */
-      },
+      where: { creatorId: consumerId },
       take: paginationQueryDto.limit,
       skip: paginationQueryDto.offset,
+      order: { weight: 'ASC' },
     });
 
     return plainToInstance(PlaylistsListDto, {
@@ -41,7 +45,8 @@ export class PlaylistsService {
 
   async findOne(consumerId: string, id: string) {
     const playlist = await this.playlistsRepository.findOneBy({
-      id /* consumerID */,
+      id,
+      creatorId: consumerId,
     });
 
     if (!playlist) {
@@ -57,7 +62,9 @@ export class PlaylistsService {
     updatePlaylistDto: UpdatePlaylistDto,
   ) {
     const playlist = await this.playlistsRepository.findOneBy({
-      id /* consumerID */,
+      id,
+      creatorId: consumerId,
+      persistent: false,
     });
 
     if (!playlist) {
@@ -69,7 +76,9 @@ export class PlaylistsService {
 
   async remove(consumerId: string, id: string) {
     const playlist = await this.playlistsRepository.findOneBy({
-      id /* consumerID */,
+      id,
+      creatorId: consumerId,
+      persistent: false,
     });
 
     if (!playlist) {

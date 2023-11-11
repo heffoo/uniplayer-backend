@@ -12,12 +12,16 @@ import { UserDto } from '../users/dto/user.dto';
 import { SignIn } from './interfaces/sign-in.interface';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PlaylistsService } from '../playlists/playlists.service';
+import { Playlist } from '../playlists/entities/playlist.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    @InjectRepository(Playlist)
+    private readonly playlistsRepository: Repository<Playlist>,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -32,6 +36,13 @@ export class AuthService {
     // todo: посолить пароль
     const newUser = await this.usersRepository.save(
       this.usersRepository.create(registrationDto),
+    );
+
+    const allTracksPlaylist = await this.playlistsRepository.save(
+      this.playlistsRepository.create({ creatorId: newUser.id, title: 'Все треки', weight: 0 }),
+    );
+    const favoriteTracksPlaylist = await this.playlistsRepository.save(
+      this.playlistsRepository.create({ creatorId: newUser.id, title: 'Любимое', weight: 1 }),
     );
 
     return plainToInstance(UserDto, newUser);
