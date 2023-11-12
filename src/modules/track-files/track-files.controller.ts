@@ -7,7 +7,7 @@ import {
   UseInterceptors,
   PayloadTooLargeException,
   UnsupportedMediaTypeException,
-  UploadedFile,
+  UploadedFile, Get, Param,
 } from '@nestjs/common';
 import { TrackFilesService } from './track-files.service';
 import { CreateFileDto } from '../files/dto/create-file.dto';
@@ -20,6 +20,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ConsumerId } from '../../common/decorators/consumer-id.decorator';
 
 @ApiTags('track-files')
 @Controller('track-files')
@@ -43,9 +44,14 @@ export class TrackFilesController {
   )
   @Post()
   create(
-    @Headers('consumerId') consumerId: string,
+    @ConsumerId() consumerId: string,
     @UploadedFile() multerFile: Express.Multer.File,
   ) {
     return this.trackFilesService.create(consumerId, multerFile);
+  }
+
+  @Get(':id/meta')
+  findMeta(@ConsumerId() consumerId: string, @Param('id') id: string) {
+    return this.trackFilesService.findMeta(consumerId, id);
   }
 }

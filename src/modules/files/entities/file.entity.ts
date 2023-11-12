@@ -1,6 +1,5 @@
 import { FileEntity } from '../intefaces/file-entity.interface';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import nodePath from 'node:path';
 
 @Entity()
 export class File implements FileEntity {
@@ -27,6 +26,6 @@ export class File implements FileEntity {
   }
 
   get url() {
-    return nodePath.join(this.path, this.name);
+    return `${this.path}/${this.name}`;
   }
 }

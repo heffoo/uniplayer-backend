@@ -2,7 +2,7 @@ import { Exclude, Expose } from 'class-transformer';
 import { TracksListItem } from '../interfaces/tracks-list-item.interface';
 
 @Exclude()
-export class TracksListItemDto implements TracksListItem {
+export class PlaylistTracksListItemDto implements TracksListItem {
   @Expose()
   id: string;
 

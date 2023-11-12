@@ -14,32 +14,32 @@ export class StorageService implements OnModuleInit {
   readonly bucket: string;
 
   constructor(private readonly configService: ConfigService) {
-    // this.clientOptions = this.configService.get<
-    //     ConfigType['storageService']['clientOptions']
-    // >('storageService.clientOptions');
-    // this.bucket = this.configService.get<
-    //     ConfigType['storageService']['bucket']
-    // >('storageService.bucket');
-    // this.client = new Minio.Client({ useSSL: false, ...this.clientOptions });
+    this.clientOptions = this.configService.get<
+        ConfigType['storageService']['clientOptions']
+    >('storageService.clientOptions');
+    this.bucket = this.configService.get<
+        ConfigType['storageService']['bucket']
+    >('storageService.bucket');
+    this.client = new Minio.Client({ useSSL: false, ...this.clientOptions });
   }
 
   async onModuleInit() {
-    // return await retry(
-    //     {
-    //         minTimeout: 10000,
-    //         retries: 10,
-    //     },
-    //     async (bail, attemptNumber) => {
-    //         try {
-    //             const buckets = await this.client.listBuckets();
-    //             this.logger.log('buckets', JSON.stringify(buckets, null, ' '));
-    //         } catch (error) {
-    //             this.logger.warn(error.message);
-    //             this.logger.warn(`Attempt call ${attemptNumber + 1} ...`);
-    //             bail(error);
-    //         }
-    //     },
-    // );
+    return await retry(
+        {
+            minTimeout: 10000,
+            retries: 10,
+        },
+        async (bail, attemptNumber) => {
+            try {
+                const buckets = await this.client.listBuckets();
+                this.logger.log('buckets', JSON.stringify(buckets, null, ' '));
+            } catch (error) {
+                this.logger.warn(error.message);
+                this.logger.warn(`Attempt call ${attemptNumber + 1} ...`);
+                bail(error);
+            }
+        },
+    );
   }
 
   async upload(objectName: string, stream: Buffer, mimetype: string) {

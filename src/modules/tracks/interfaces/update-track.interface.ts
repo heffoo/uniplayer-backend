@@ -1,4 +1,4 @@
-export interface CreateTrack {
+export interface UpdateTrack {
   title?: string;
   singerName?: string;
   albumName?: string;

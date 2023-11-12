@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateFileDto } from './dto/create-file.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { File } from './entities/file.entity';
 import { Repository } from 'typeorm';
@@ -27,7 +26,7 @@ export class FilesService {
 
     const filePath = multerFile.path || '';
 
-    const newFileEntity = await this.filesRepository.create({
+    const newFileEntity = this.filesRepository.create({
       creatorId: consumerId,
       originalName: multerFile.originalname,
       ext: nodePath.extname(multerFile.originalname),

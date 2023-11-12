@@ -1,0 +1,73 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Track } from './entities/track.entity';
+import { Repository } from 'typeorm';
+import { Playlist } from '../playlists/entities/playlist.entity';
+import { CreateTrack } from './interfaces/create-track.interface';
+import { PlaylistsToTracks } from '../playlists-to-tracks/entities/playlists-to-tracks.entity';
+import { plainToInstance } from 'class-transformer';
+import { TrackDto } from './dto/track.dto';
+import { UpdateTrack } from './interfaces/update-track.interface';
+
+@Injectable()
+export class TracksService {
+  constructor(
+    @InjectRepository(Track)
+    private readonly tracksRepository: Repository<Track>,
+    @InjectRepository(Playlist)
+    private readonly playlistsRepository: Repository<Playlist>,
+    @InjectRepository(PlaylistsToTracks)
+    private readonly playlistsToTracksRepository: Repository<PlaylistsToTracks>,
+  ) {}
+
+  async findOne(consumerId: string, id: string) {
+    const track = await this.findConsumerTrack(consumerId, id);
+    return plainToInstance(TrackDto, track);
+  }
+
+  async create(consumerId: string, createTrackDto: CreateTrack) {
+    const playlist = await this.playlistsRepository.findOneBy({
+      title: 'Все треки',
+      creatorId: consumerId,
+    });
+
+    const newTrack = await this.tracksRepository.save(
+      this.tracksRepository.create(createTrackDto),
+    );
+
+    const maxWeight = await this.playlistsToTracksRepository.maximum('weight', {
+      playlists: { creatorId: consumerId },
+    });
+    const newRelation = await this.playlistsToTracksRepository.save(
+      this.playlistsToTracksRepository.create({
+        trackId: newTrack.id,
+        playlistId: playlist.id,
+        weight: maxWeight + 1,
+      }),
+    );
+
+    return plainToInstance(TrackDto, newTrack);
+  }
+
+  async update(consumerId: string, id: string, updateTrackDto: UpdateTrack) {
+    const track = await this.findConsumerTrack(consumerId, id);
+    const updatedTrack = this.tracksRepository.update(
+      { id },
+      this.tracksRepository.create({ ...track, ...updateTrackDto }),
+    );
+    return plainToInstance(TrackDto, updatedTrack);
+  }
+
+  private async findConsumerTrack(consumerId: string, id: string) {
+    const track = await this.tracksRepository.findOneBy({
+      id,
+      creatorId: consumerId,
+    });
+    if (!track) {
+      throw new NotFoundException('Track not found');
+    }
+
+    return track;
+  }
+
+}
