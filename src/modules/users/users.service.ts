@@ -12,7 +12,7 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async me(consumerId: string) {
+  async findMe(consumerId: string) {
     const user = await this.usersRepository.findOneBy({ id: consumerId });
 
     if (!user) {

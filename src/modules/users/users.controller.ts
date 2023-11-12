@@ -11,7 +11,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('me')
-  findOne(@ConsumerId() consumerId: string) {
-    return this.usersService.me(consumerId);
+  findMe(@ConsumerId() consumerId: string) {
+    return this.usersService.findMe(consumerId);
   }
 }
