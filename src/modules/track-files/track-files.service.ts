@@ -18,6 +18,11 @@ export class TrackFilesService {
 
     // const file = await this.filesService.create(consumerId, multerFile);
 
-    return audioMetadata;
+    return {
+      artist: audioMetadata.common.artist,
+      album: audioMetadata.common.album,
+      picture: audioMetadata.common.picture,
+      title: audioMetadata.common.title,
+    };
   }
 }
