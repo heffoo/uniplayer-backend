@@ -1,9 +1,11 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Post, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiTags } from '@nestjs/swagger';
 import { RegistrationDto } from './dto/registration.dto';
 import { SignInDto } from './dto/sign-in.dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { plainToInstance } from 'class-transformer';
+import { AuthStatusDto } from './dto/auth-status.dto';
 
 @ApiTags('auth')
 @Controller()
@@ -23,5 +25,31 @@ export class AuthController {
     const token = await this.authService.signIn(signInDto);
     response.cookie('access_token', token, { httpOnly: true, secure: false });
     return;
+  }
+
+  @Post('signout')
+  async signOut(
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    if (request.cookies['access_token']) {
+      response.clearCookie('access_token', { httpOnly: true, secure: false });
+    }
+    return;
+  }
+
+  @Post('status')
+  async getStatus(
+    @Req() request: Request,
+  ) {
+    if (request.cookies['access_token']) {
+      return plainToInstance(AuthStatusDto, {
+        signedIn: true
+      });
+    } else {
+      return plainToInstance(AuthStatusDto, {
+        signedIn: false
+      });
+    }
   }
 }

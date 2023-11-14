@@ -12,7 +12,6 @@ import { UserDto } from '../users/dto/user.dto';
 import { SignIn } from './interfaces/sign-in.interface';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PlaylistsService } from '../playlists/playlists.service';
 import { Playlist } from '../playlists/entities/playlist.entity';
 
 @Injectable()
