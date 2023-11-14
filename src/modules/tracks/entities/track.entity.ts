@@ -15,10 +15,10 @@ export class Track implements TrackEntity {
   @Column({ length: TracksConstants.SINGER_MAX_LENGTH })
   singerName: string;
 
-  @Column({ length: TracksConstants.ALBUM_MAX_LENGTH })
+  @Column({ length: TracksConstants.ALBUM_MAX_LENGTH, nullable: true })
   albumName: string;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   coverFileId: string;
 
   @Column('uuid')

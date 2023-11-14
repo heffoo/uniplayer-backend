@@ -1,7 +1,7 @@
 export interface CreateTrack {
   title: string;
   singerName: string;
-  albumName: string;
-  coverFileId: string;
+  albumName?: string;
+  coverFileId?: string;
   trackFileId: string;
 }

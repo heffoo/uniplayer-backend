@@ -1,5 +1,6 @@
 import { Exclude, Expose } from 'class-transformer';
 import { Track } from '../interfaces/track.interface';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Exclude()
 export class TrackDto implements Track {
@@ -12,11 +13,13 @@ export class TrackDto implements Track {
   @Expose()
   singerName: string;
 
+  @ApiProperty({ nullable: true })
   @Expose()
-  albumName: string;
+  albumName: string | null;
 
+  @ApiProperty({ nullable: true })
   @Expose()
-  coverFileId: string;
+  coverFileId: string | null;
 
   @Expose()
   trackFileId: string;

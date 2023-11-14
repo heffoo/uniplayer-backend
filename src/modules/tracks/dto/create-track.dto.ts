@@ -1,6 +1,6 @@
 import { Exclude, Expose } from 'class-transformer';
 import { CreateTrack } from '../interfaces/create-track.interface';
-import { IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
+import { IsOptional, IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
 import { TracksConstants } from '../tracks.constants';
 
 @Exclude()
@@ -21,11 +21,13 @@ export class CreateTrackDto implements CreateTrack {
   @IsString()
   @MinLength(TracksConstants.ALBUM_MIN_LENGTH)
   @MaxLength(TracksConstants.ALBUM_MAX_LENGTH)
-  albumName: string;
+  @IsOptional()
+  albumName?: string;
 
   @Expose()
   @IsUUID(4)
-  coverFileId: string;
+  @IsOptional()
+  coverFileId?: string;
 
   @Expose()
   @IsUUID(4)

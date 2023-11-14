@@ -44,10 +44,12 @@ export class TrackFilesService {
     );
 
     return {
-      artist: audioMetadata.common.artist,
-      album: audioMetadata.common.album,
-      title: audioMetadata.common.title,
-      picture: audioMetadata.common.picture.length && Buffer.from(audioMetadata.common.picture[0].data).toString('base64'),
+      artist: audioMetadata?.common?.artist || null,
+      album: audioMetadata?.common?.album || null,
+      title: audioMetadata?.common?.title || null,
+      picture: audioMetadata?.common?.picture?.length
+        ? Buffer.from(audioMetadata.common.picture[0].data).toString('base64')
+        : null,
     };
   }
 }
