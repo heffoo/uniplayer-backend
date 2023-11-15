@@ -3,6 +3,7 @@ export interface TrackEntity {
   title: string;
   singerName: string;
   albumName: string;
+  duration: number;
   coverFileId: string;
   trackFileId: string;
 }

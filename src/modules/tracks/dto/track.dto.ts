@@ -19,6 +19,10 @@ export class TrackDto implements Track {
 
   @ApiProperty({ nullable: true })
   @Expose()
+  duration: number | null;
+
+  @ApiProperty({ nullable: true })
+  @Expose()
   coverFileId: string | null;
 
   @Expose()

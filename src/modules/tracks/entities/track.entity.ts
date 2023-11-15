@@ -18,6 +18,9 @@ export class Track implements TrackEntity {
   @Column({ length: TracksConstants.ALBUM_MAX_LENGTH, nullable: true })
   albumName: string;
 
+  @Column({ nullable: true })
+  duration: number;
+
   @Column('uuid', { nullable: true })
   coverFileId: string;
 

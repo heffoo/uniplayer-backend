@@ -7,6 +7,7 @@ import { StorageService } from '../../common/modules/storage/storage.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { File } from '../files/entities/file.entity';
 import { Repository } from 'typeorm';
+import { TrackFileMetaDto } from './dto/track-file-meta.dto';
 
 @Injectable()
 export class TrackFilesService {
@@ -37,14 +38,16 @@ export class TrackFilesService {
 
     const audioMetadata = await MusicMeta.parseBuffer(Buffer.from(file.buffer));
 
-    return {
+    return plainToInstance(TrackFileMetaDto, {
       artist: audioMetadata?.common?.artist || null,
       album: audioMetadata?.common?.album || null,
       title: audioMetadata?.common?.title || null,
       picture: audioMetadata?.common?.picture?.length
         ? Buffer.from(audioMetadata.common.picture[0].data).toString('base64')
         : null,
-    };
+      duration: audioMetadata?.format?.duration || null,
+      bitrate: audioMetadata?.format?.bitrate || null,
+    });
   }
 
   async findById(consumerId: string, id: string) {
