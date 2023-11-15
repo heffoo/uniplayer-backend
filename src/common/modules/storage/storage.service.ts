@@ -15,30 +15,30 @@ export class StorageService implements OnModuleInit {
 
   constructor(private readonly configService: ConfigService) {
     this.clientOptions = this.configService.get<
-        ConfigType['storageService']['clientOptions']
+      ConfigType['storageService']['clientOptions']
     >('storageService.clientOptions');
     this.bucket = this.configService.get<
-        ConfigType['storageService']['bucket']
+      ConfigType['storageService']['bucket']
     >('storageService.bucket');
     this.client = new Minio.Client({ useSSL: false, ...this.clientOptions });
   }
 
   async onModuleInit() {
     return await retry(
-        {
-            minTimeout: 10000,
-            retries: 10,
-        },
-        async (bail, attemptNumber) => {
-            try {
-                const buckets = await this.client.listBuckets();
-                this.logger.log('buckets', JSON.stringify(buckets, null, ' '));
-            } catch (error) {
-                this.logger.warn(error.message);
-                this.logger.warn(`Attempt call ${attemptNumber + 1} ...`);
-                bail(error);
-            }
-        },
+      {
+        minTimeout: 10000,
+        retries: 10,
+      },
+      async (bail, attemptNumber) => {
+        try {
+          const buckets = await this.client.listBuckets();
+          this.logger.log('buckets', JSON.stringify(buckets, null, ' '));
+        } catch (error) {
+          this.logger.warn(error.message);
+          this.logger.warn(`Attempt call ${attemptNumber + 1} ...`);
+          bail(error);
+        }
+      },
     );
   }
 
@@ -79,6 +79,11 @@ export class StorageService implements OnModuleInit {
         },
       );
     });
+  }
+
+  async downloadWithStream(url: string) {
+    const objectName = this.getObjectNameFromUrl(url);
+    return this.client.getObject(this.bucket, objectName);
   }
 
   async getObjectList(prefix?: string): Promise<Array<BucketItem>> {

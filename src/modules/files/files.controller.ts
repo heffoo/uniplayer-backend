@@ -28,7 +28,10 @@ export class FilesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.filesService.findOne(id);
+  findOne(
+    @Headers('consumerId') consumerId: string,
+    @Param('id') id: string
+  ) {
+    return this.filesService.findOne(consumerId, id);
   }
 }

@@ -13,6 +13,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration, { ConfigType } from './config/configuration';
 import { TracksModule } from './modules/tracks/tracks.module';
 import { PlaylistsToTracksModule } from './modules/playlists-to-tracks/playlists-to-tracks.module';
+import { CoverFilesModule } from './modules/cover-files/cover-files.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { PlaylistsToTracksModule } from './modules/playlists-to-tracks/playlists
     AuthModule,
     UsersModule,
     TrackFilesModule,
+    CoverFilesModule,
     FilesModule,
     StorageModule,
   ],

@@ -46,8 +46,11 @@ export class FilesService {
     return newFileEntity;
   }
 
-  async findOne(id: string) {
-    const file = await this.filesRepository.findOneBy({ id });
+  async findOne(consumerId: string, id: string) {
+    const file = await this.filesRepository.findOneBy({
+      id,
+      creatorId: consumerId,
+    });
 
     if (!file) {
       throw new NotFoundException();

@@ -7,10 +7,9 @@ import {
   UnsupportedMediaTypeException,
   UploadedFile,
   Get,
-  Param,
-  StreamableFile,
+  Param, StreamableFile,
 } from '@nestjs/common';
-import { TrackFilesService } from './track-files.service';
+import { CoverFilesService } from './cover-files.service';
 import { CreateFileDto } from '../files/dto/create-file.dto';
 import {
   ApiBody,
@@ -22,12 +21,14 @@ import {
 import { AuthGuard } from '../auth/auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ConsumerId } from '../../common/decorators/consumer-id.decorator';
+import { createReadStream } from 'fs';
+import { Readable} from 'stream';
 
-@ApiTags('track-files')
-@Controller('track-files')
+@ApiTags('cover-files')
+@Controller('cover-files')
 @UseGuards(AuthGuard)
-export class TrackFilesController {
-  constructor(private readonly trackFilesService: TrackFilesService) {}
+export class CoverFilesController {
+  constructor(private readonly coverFilesService: CoverFilesService) {}
 
   @ApiBody({ type: CreateFileDto })
   @ApiConsumes('multipart/form-data')
@@ -41,17 +42,15 @@ export class TrackFilesController {
     @ConsumerId() consumerId: string,
     @UploadedFile() multerFile: Express.Multer.File,
   ) {
-    return this.trackFilesService.create(consumerId, multerFile);
-  }
-
-  @Get(':id/meta')
-  findMeta(@ConsumerId() consumerId: string, @Param('id') id: string) {
-    return this.trackFilesService.findMeta(consumerId, id);
+    return this.coverFilesService.create(consumerId, multerFile);
   }
 
   @Get(':id')
-  async findById(@ConsumerId() consumerId: string, @Param('id') id: string) {
-    const fileStream = await this.trackFilesService.findById(consumerId, id);
+  async findById(
+    @ConsumerId() consumerId: string,
+    @Param('id') id: string,
+  ) {
+    const fileStream = await this.coverFilesService.findById(consumerId, id);
     return new StreamableFile(fileStream);
   }
 }
