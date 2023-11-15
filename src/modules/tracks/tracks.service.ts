@@ -32,12 +32,13 @@ export class TracksService {
     });
 
     const newTrack = await this.tracksRepository.save(
-      this.tracksRepository.create(createTrackDto),
+      this.tracksRepository.create({
+        ...createTrackDto,
+        creatorId: consumerId,
+      }),
     );
 
-    const maxWeight = await this.playlistsToTracksRepository.maximum('weight', {
-      playlists: { creatorId: consumerId },
-    });
+    const maxWeight = await this.playlistsToTracksRepository.maximum('weight');
     const newRelation = await this.playlistsToTracksRepository.save(
       this.playlistsToTracksRepository.create({
         trackId: newTrack.id,
@@ -69,5 +70,4 @@ export class TracksService {
 
     return track;
   }
-
 }

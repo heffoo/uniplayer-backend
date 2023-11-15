@@ -29,9 +29,7 @@ export class PlaylistTracksService {
       consumerId,
       addPlaylistTrackDto.trackId,
     );
-    const maxWeight = await this.playlistsToTracksRepository.maximum('weight', {
-      playlists: { creatorId: consumerId },
-    });
+    const maxWeight = await this.playlistsToTracksRepository.maximum('weight');
 
     const newRelation = await this.playlistsToTracksRepository.save(
       this.playlistsToTracksRepository.create({
