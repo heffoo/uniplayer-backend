@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiTags } from '@nestjs/swagger';
 import { RegistrationDto } from './dto/registration.dto';
@@ -38,18 +38,10 @@ export class AuthController {
     return;
   }
 
-  @Post('status')
-  async getStatus(
-    @Req() request: Request,
-  ) {
-    if (request.cookies['access_token']) {
-      return plainToInstance(AuthStatusDto, {
-        signedIn: true
-      });
-    } else {
-      return plainToInstance(AuthStatusDto, {
-        signedIn: false
-      });
-    }
+  @Get('status')
+  async getStatus(@Req() request: Request) {
+    return plainToInstance(AuthStatusDto, {
+      signedIn: 'access_token' in request.cookies,
+    });
   }
 }
