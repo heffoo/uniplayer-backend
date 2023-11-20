@@ -38,10 +38,20 @@ export class AuthService {
     );
 
     const allTracksPlaylist = await this.playlistsRepository.save(
-      this.playlistsRepository.create({ creatorId: newUser.id, title: 'Все треки', weight: 0 }),
+      this.playlistsRepository.create({
+        creatorId: newUser.id,
+        title: 'Все треки',
+        weight: 0,
+        persistent: true,
+      }),
     );
     const favoriteTracksPlaylist = await this.playlistsRepository.save(
-      this.playlistsRepository.create({ creatorId: newUser.id, title: 'Любимое', weight: 1 }),
+      this.playlistsRepository.create({
+        creatorId: newUser.id,
+        title: 'Любимое',
+        weight: 1,
+        persistent: true,
+      }),
     );
 
     return plainToInstance(UserDto, newUser);
