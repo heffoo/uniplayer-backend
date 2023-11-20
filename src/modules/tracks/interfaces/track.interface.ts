@@ -6,4 +6,5 @@ export interface Track {
   duration: number | null;
   coverFileId: string | null;
   trackFileId: string;
+  playlistIds: Array<string>;
 }

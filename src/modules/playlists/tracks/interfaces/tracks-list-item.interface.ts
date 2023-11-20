@@ -5,4 +5,6 @@ export interface TracksListItem {
   albumName: string;
   coverFileId: string;
   trackFileId: string;
+  duration: number;
+  playlistIds: Array<string>;
 }

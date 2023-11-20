@@ -22,7 +22,10 @@ export class TracksService {
 
   async findOne(consumerId: string, id: string) {
     const track = await this.findConsumerTrack(consumerId, id);
-    return plainToInstance(TrackDto, track);
+    return plainToInstance(TrackDto, {
+      ...track,
+      playlistIds: track?.playlistsToTracks?.map((ptt) => ptt.playlistId),
+    });
   }
 
   async create(consumerId: string, createTrackDto: CreateTrack) {
@@ -47,7 +50,10 @@ export class TracksService {
       }),
     );
 
-    return plainToInstance(TrackDto, newTrack);
+    return plainToInstance(
+      TrackDto,
+      await this.findConsumerTrack(consumerId, newTrack.id),
+    );
   }
 
   async update(consumerId: string, id: string, updateTrackDto: UpdateTrack) {
@@ -56,14 +62,27 @@ export class TracksService {
       { id },
       this.tracksRepository.create({ ...track, ...updateTrackDto }),
     );
-    return plainToInstance(TrackDto, updatedTrack);
+    return plainToInstance(
+      TrackDto,
+      await this.findConsumerTrack(consumerId, id),
+    );
   }
 
   private async findConsumerTrack(consumerId: string, id: string) {
-    const track = await this.tracksRepository.findOneBy({
-      id,
-      creatorId: consumerId,
-    });
+    const track = await this.tracksRepository
+      .createQueryBuilder('track')
+      .innerJoinAndMapMany(
+        'track.playlistsToTracks',
+        PlaylistsToTracks,
+        'playlists_to_tracks',
+        'track.id = playlists_to_tracks."trackId"',
+      )
+      .where({
+        id,
+        creatorId: consumerId,
+      })
+      .getOne();
+
     if (!track) {
       throw new NotFoundException('Track not found');
     }

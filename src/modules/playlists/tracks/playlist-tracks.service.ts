@@ -47,7 +47,8 @@ export class PlaylistTracksService {
 
     const [items, count] = await this.tracksRepository
       .createQueryBuilder('track')
-      .innerJoinAndSelect(
+      .innerJoinAndMapMany(
+        'track.playlistsToTracks',
         PlaylistsToTracks,
         'playlists_to_tracks',
         'track.id = playlists_to_tracks."trackId"',
@@ -57,7 +58,10 @@ export class PlaylistTracksService {
       .getManyAndCount();
 
     return plainToInstance(PlaylistTracksListDto, {
-      items,
+      items: items.map((i) => ({
+        ...i,
+        playlistIds: i?.playlistsToTracks?.map((ptt) => ptt.playlistId),
+      })),
       count,
     });
   }

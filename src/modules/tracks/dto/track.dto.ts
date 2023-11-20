@@ -27,4 +27,7 @@ export class TrackDto implements Track {
 
   @Expose()
   trackFileId: string;
+
+  @Expose()
+  playlistIds: Array<string>;
 }

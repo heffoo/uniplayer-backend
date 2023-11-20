@@ -20,4 +20,10 @@ export class PlaylistTracksListItemDto implements TracksListItem {
 
   @Expose()
   trackFileId: string;
+
+  @Expose()
+  duration: number;
+
+  @Expose()
+  playlistIds: Array<string>;
 }
