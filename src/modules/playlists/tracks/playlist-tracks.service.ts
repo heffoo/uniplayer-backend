@@ -45,6 +45,19 @@ export class PlaylistTracksService {
   async findAll(consumerId: string, id: string) {
     const playlist = await this.findConsumerPlaylist(consumerId, id);
 
+    const tracks = await this.tracksRepository
+      .createQueryBuilder('track')
+      .select('track.id')
+      .innerJoinAndMapMany(
+        'track.playlistsToTracks',
+        PlaylistsToTracks,
+        'playlists_to_tracks',
+        'track.id = playlists_to_tracks."trackId"',
+      )
+      .where(`playlists_to_tracks."playlistId" = '${playlist.id}'::UUID`)
+      .orderBy('playlists_to_tracks.weight', 'ASC')
+      .getMany();
+
     const [items, count] = await this.tracksRepository
       .createQueryBuilder('track')
       .innerJoinAndMapMany(
@@ -53,7 +66,7 @@ export class PlaylistTracksService {
         'playlists_to_tracks',
         'track.id = playlists_to_tracks."trackId"',
       )
-      .where(`playlists_to_tracks."playlistId" = '${playlist.id}'::UUID`)
+      .where(`track."id" IN (${tracks.map(t => "'" + t.id + "'" + '::UUID')})`)
       .orderBy('playlists_to_tracks.weight', 'ASC')
       .getManyAndCount();
 
